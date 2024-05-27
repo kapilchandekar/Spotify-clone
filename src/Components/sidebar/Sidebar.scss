@@ -1,0 +1,24 @@
+.w_400 {
+  width: 100% !important;
+  
+}
+
+.custom-placeholder::placeholder {
+  color: grey !important; /* Change the placeholder color to red */
+}
+
+.position-relative {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  right: 34px; /* Adjust the position as necessary */
+  top: 50%;
+  transform: translateY(-50%);
+ 
+}
+
+.pr-5 {
+  padding-right: 3rem; /* Ensure there's enough space for the icon */
+}
