@@ -12,7 +12,7 @@ const ForYou = ({searchTerm}) => {
 
   const dispatch = useDispatch();
 
-  console.log(searchData)
+ 
 
   const handleclickPlaySong = (attributes) => {
     const newBgColor = {

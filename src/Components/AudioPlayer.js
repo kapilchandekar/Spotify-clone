@@ -8,6 +8,7 @@ import {
 } from "react-icons/tb";
 import { BsThreeDots } from "react-icons/bs";
 import { PiSpeakerHighFill, PiSpeakerXFill } from "react-icons/pi";
+import { toast } from "react-toastify";
 
 import "./style.scss";
 
@@ -18,6 +19,7 @@ const AudioPlayer = () => {
   const audioRef = useRef(null);
   const { song } = useSelector((state) => state.audio);
   //   const dispatch = useDispatch();
+  const notify = () => toast("Saved to Favorite list");
 
   const togglePlay = () => {
     setIsPlaying(!isPlaying);
@@ -52,23 +54,27 @@ const AudioPlayer = () => {
   };
 
   const handleToggleFavorite = () => {
-    // Toggle favorite status
-    setIsFavorite(!isFavorite);
-    // Update local storage with the favorite list
-    let favorites = [];
-    const favoritesFromStorage = localStorage.getItem("favorites");
-    if (favoritesFromStorage) {
-      favorites = JSON.parse(favoritesFromStorage);
-    }
-    if (isFavorite) {
-      // Remove from favorites list
-      favorites = favorites.filter((fav) => fav !== song?.name);
-    } else {
+  // Toggle favorite status
+  setIsFavorite(!isFavorite);
+  // Update local storage with the favorite list
+  let favorites = [];
+  const favoritesFromStorage = localStorage.getItem("favorites");
+  if (favoritesFromStorage) {
+    favorites = JSON.parse(favoritesFromStorage);
+  }
+  if (isFavorite) {
+    // Remove from favorites list
+    favorites = favorites.filter((fav) => fav !== song?.name);
+  } else {
+    // Check if song is not already in favorites list
+    if (!favorites.includes(song?.name)) {
       // Add to favorites list
       favorites.push(song);
+      notify();
     }
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  };
+  }
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+};
 
   useEffect(() => {
     // Retrieve favorite list from local storage
@@ -81,16 +87,22 @@ const AudioPlayer = () => {
       );
     }
   }, [song]);
-  
+
   useEffect(() => {
     if (song) {
       // Update recently played list in session storage
-      const recentlyPlayedFromStorage = sessionStorage.getItem("recentlyPlayed");
-      let recentlyPlayed = recentlyPlayedFromStorage ? JSON.parse(recentlyPlayedFromStorage) : [];
-      
+      const recentlyPlayedFromStorage =
+        sessionStorage.getItem("recentlyPlayed");
+      let recentlyPlayed = recentlyPlayedFromStorage
+        ? JSON.parse(recentlyPlayedFromStorage)
+        : [];
+
       // Add the new song to the beginning of the list
-      recentlyPlayed = [song, ...recentlyPlayed.filter((s) => s.name !== song.name)];
-      
+      recentlyPlayed = [
+        song,
+        ...recentlyPlayed.filter((s) => s.name !== song.name),
+      ];
+
       // Keep only the last 10 played songs
       if (recentlyPlayed.length > 10) {
         recentlyPlayed = recentlyPlayed.slice(0, 10);
@@ -102,17 +114,21 @@ const AudioPlayer = () => {
 
   return (
     <div className="player px-lg-0 px-4">
-      <h3 className="fw-bold text-color-white pt-4" style={{ color: `#${dynamicColor?.textColor1}` }}>{song?.name}</h3>
-      <p  style={{ color: `#${dynamicColor?.textColor2}` }} >{song?.albumName}</p>
+      <h3
+        className="fw-bold text-color-white pt-4"
+        style={{ color: `#${dynamicColor?.textColor1}` }}
+      >
+        {song?.name}
+      </h3>
+      <p style={{ color: `#${dynamicColor?.textColor2}` }}>{song?.albumName}</p>
       <div>
-      {song?.artwork?.url && (
-        <img
-          className="rounded w-100"
-          src={song?.artwork?.url.replace("{w}", "480").replace("{h}", "480")}
-          alt={`${song.name} artwork`}
-        />
-      )}
-
+        {song?.artwork?.url && (
+          <img
+            className="rounded w-100"
+            src={song?.artwork?.url.replace("{w}", "480").replace("{h}", "480")}
+            alt={`${song.name} artwork`}
+          />
+        )}
       </div>
       <audio
         ref={audioRef}
