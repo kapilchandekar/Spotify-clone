@@ -7,7 +7,6 @@ import { Spinner } from "react-bootstrap";
 const ForYou = ({searchTerm}) => {
   const artistId = 567072;
   const { data, isLoading, error } = useGetRelatedArtistQuery({ id: artistId });
-  const { searchData } = useGetRelatedArtistQuery({ term: searchTerm }, { skip: !searchTerm });
   const [songData, setSongData] = useState();
 
   const dispatch = useDispatch();

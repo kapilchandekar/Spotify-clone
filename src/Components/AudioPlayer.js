@@ -7,7 +7,7 @@ import {
   TbPlayerTrackPrevFilled,
 } from "react-icons/tb";
 import { BsThreeDots } from "react-icons/bs";
-import { PiSpeakerHighFill, PiSpeakerXFill } from "react-icons/pi";
+import { PiSpeakerHighFill } from "react-icons/pi";
 import { toast } from "react-toastify";
 
 import "./style.scss";
